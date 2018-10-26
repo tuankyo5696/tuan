@@ -2,7 +2,25 @@ from django.shortcuts import render
 from django.http import HttpResponse
 # Credjango.http import HttpReponseate your views here.
 def myHome(request):
-    return render(request,'home_page.html',{})
+    context= {
+        "title": "Hello World",
+        "content": "Welcome to Home Page"
+    }
+    return render(request,'home_page.html',context)
+
+def about_page(request):
+    context ={
+        "title": "About Page",
+        "content": "Welcome to About Page"
+    }
+    return render(request,'home_page.html',context)
+
+def contact_page(request):
+    context={
+        "title": "Contact Page",
+        "content": "Welcome to Contact Page"
+    }
+    return render(request,'contact/views.html',context)
 
 def myHome_old(request):
     html_= """
