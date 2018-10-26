@@ -1,6 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.http import HttpResponse
+from django.contrib.auth import authenticate, login
+
 # Credjango.http import HttpReponseate your views here.
+from shop import forms
 def myHome(request):
     context= {
         "title": "Hello World",
@@ -16,11 +19,52 @@ def about_page(request):
     return render(request,'home_page.html',context)
 
 def contact_page(request):
+    contact_form= forms.ContactForm(request.POST or None)
     context={
         "title": "Contact Page",
-        "content": "Welcome to Contact Page"
+        "content": "Welcome to Contact Page",
+        "form" : contact_form
     }
+    if contact_form.is_valid():
+        print(contact_form.cleaned_data)
+
+
+    # if request.method=='POST':
+    #
+    #     # print(request.POST.get('fullname'))
+    #     # print(request.POST.get('email'))
+    #     # print(request.POST.get('content'))
     return render(request,'contact/views.html',context)
+
+def login_page(request):
+    form=forms.LoginForm(request.POST or None)
+
+    context={
+        "form":form
+    }
+    if form.is_valid():
+        print(form.cleaned_data)
+        username=form.cleaned_data.get("username")
+        password=form.cleaned_data.get("password")
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            # A backend authenticated the credentials
+            
+            login(request,user)
+            # context['form']=forms.LoginForm()
+            return redirect("/login")
+        else:
+            # No backend authenticated the credentials
+            print("Error")
+    return render(request,'auth/login.html',context)
+
+def register_page(request):
+    form=forms.LoginForm(request.POST or None)
+
+    if form.is_valid():
+        print(form.cleaned_data)
+    return render(request,'auth/register.html',{})
+
 
 def myHome_old(request):
     html_= """
